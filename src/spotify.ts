@@ -1,11 +1,12 @@
 import SpotifyWebApi from 'spotify-web-api-node';
+import 'dotenv/config';
 
 let expires_in: number = 3600;
 const refresh_early_by = 5; // refresh x seconds earlier
 
 const spotify = new SpotifyWebApi({
-  clientId: 'ca9dd04a17c64ac5ad8b3fe6352e9288',
-  clientSecret: '431feb9a65444066892bee80272cf5f3' ,
+  clientId: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
 });
 
 export async function refreshToken(): Promise<void> {
@@ -18,6 +19,9 @@ export async function refreshToken(): Promise<void> {
   });
 }
 
-//setInterval(refreshToken, expires_in*1000 - refresh_early_by*1000);
+export async function autoRefreshToken(): Promise<void> {
+  await refreshToken();
+  setInterval(refreshToken, expires_in*1000 - refresh_early_by*1000);
+}
 
 export default spotify; 

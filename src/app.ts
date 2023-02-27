@@ -2,7 +2,7 @@ import fs from 'fs'
 import express from 'express';
 import {convertToMp3, downloadFromYoutube, getYoutubeId} from './download';
 import { log } from './log';
-import { refreshToken } from './spotify';
+import { autoRefreshToken } from './spotify';
 import { addMetadataToFile, getYoutubeQueryString, getTrackByQuery, getTrackById, getPlaylistTracks, Track } from './tags';
 
 //import http from 'http';
@@ -35,6 +35,7 @@ app.get("/download/query", async (req, res) => {
   // get track spotify metadata
   const query: string = req.query.title as string;
   const track = await getTrackByQuery(query);
+  log(`Downloading ${query}`)
 
   // get youtube link
   let ytlink: string | undefined = req.query.ytlink as string | undefined;
@@ -43,6 +44,8 @@ app.get("/download/query", async (req, res) => {
     ytlink = await getYoutubeId(ytQuery);
   if (!ytlink)
     return res.send({ error: true });
+
+  log(`Got ${track.name} by ${track.artists[0]} and ${ytlink}`);
 
   const filename = await downloadFile(track, ytlink as string);
   res.download(filename, `${track.name}.mp3`);
@@ -79,7 +82,7 @@ app.get("/download/playlist", async (req, res) => {
 
 // run dev
 const PORT = process.env.PORT || 5000;
-refreshToken().then(() => {
+autoRefreshToken().then(() => {
   app.listen(PORT, () => {
     return console.log(`Server started on ${PORT}`);
   })

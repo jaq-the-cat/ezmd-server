@@ -1,5 +1,4 @@
 import spotify from './spotify';
-import ffmpeg from 'ffmpeg';
 import {ErrorType, log} from './log';
 import NodeID3 from 'node-id3';
 
