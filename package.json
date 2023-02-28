@@ -25,7 +25,6 @@
     "sqlite3": "^5.0.2",
     "tslint": "^6.1.3",
     "typeorm": "^0.2.37",
-    "youtube-suggest-gen": "^1.0.7",
     "ytdl-core": "^4.11.2",
     "ytt": "^2.2.1"
   },

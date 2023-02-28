@@ -1,6 +1,5 @@
 import ytdl from 'ytdl-core';
 import ffmpeg from 'ffmpeg';
-import { suggestions as getSuggestions } from 'youtube-suggest-gen'
 import fs from 'fs';
 import youtube from '@yimura/scraper'
 import {ErrorType, log} from './log';
