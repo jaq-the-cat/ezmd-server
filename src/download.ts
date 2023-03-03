@@ -12,14 +12,21 @@ export async function getYoutubeId(query: string): Promise<string> {
   return results.videos[0].id;
 }
 
-export function downloadFromYoutube(link: string): string {
-  const filename = `/tmp/ezmd-${Date.now()}.mp4`;
-  ytdl(link, {
+export async function downloadFromYoutube(link: string): Promise<string> {
+  const stream = ytdl(link, {
     filter: format => format.container === "mp4",
     quality: 'highestaudio', 
-  }).pipe(fs.createWriteStream(filename));
-  log(`downloadFromYoutube: Downloaded video to: ${filename}`);
-  return filename;
+  });
+  const filename = `/tmp/ezmd-${Date.now()}.mp4`;
+  log(`downloadFromYoutube: Downloading ${link}`);
+  return new Promise((resolve) => {
+    stream
+      .pipe(fs.createWriteStream(filename))
+      .on('close', () => {
+        log(`downloadFromYoutube: Downloaded video to: ${filename}`);
+        resolve(filename)
+      });
+  })
 }
 
 export async function convertToMp3(filename: string, destFilename: string): Promise<void> {

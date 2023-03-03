@@ -4,7 +4,7 @@ import { addMetadataToFile, getTrackByQuery, getYoutubeQueryString, Track } from
 import fs from 'fs';
 
 async function downloadFile(track: Track, ytlink: string): Promise<string> {
-  const filename = downloadFromYoutube(ytlink as string);
+  const filename = await downloadFromYoutube(ytlink as string);
   const mp3Filename = filename.replace(".mp4", ".mp3");
   // convert to mp3
   await convertToMp3(filename, mp3Filename);
